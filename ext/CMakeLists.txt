@@ -15,3 +15,7 @@ set(GLFW_BUILD_X11 ON)
 set(GLFW_BUILD_WAYLAND OFF)
 
 add_subdirectory(glfw)
+
+# Adding GLM
+
+add_subdirectory(glm)
