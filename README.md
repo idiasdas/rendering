@@ -58,3 +58,12 @@ Currently using:
 - [glm](https://github.com/g-truc/glm)
 
 All external software can be found in `rendering/ext/`.
+
+# Progress
+
+- [x] Tutorial 01
+- [x] Tutorial 02
+
+>[!NOTE]
+>I have modified LoadShaders to handle relative paths between the source file and the shaders' files.
+>Therefore, you are now free to choose whichever build directory you would like.
