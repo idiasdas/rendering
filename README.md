@@ -33,7 +33,6 @@ Configure CMake:
 ```bash
 $ cmake -B build -DCMAKE_BUILD_TYPE=Debug
 ```
-
 Build the project:
 
 ```bash
@@ -58,3 +57,12 @@ Currently using:
 - [glm](https://github.com/g-truc/glm)
 
 All external software can be found in `rendering/ext/`.
+
+# Progress
+
+- [x] Tutorial 01
+- [x] Tutorial 02
+
+>[!NOTE]
+>I have changed the LoadShaders() function so it only needs the shaders relative path to the executable's source.
+>Therefore, you can now use whichever build directory you want, as long as you run the executables from this directory.
