@@ -33,6 +33,14 @@ Configure CMake:
 ```bash
 $ cmake -B build -DCMAKE_BUILD_TYPE=Debug
 ```
+<<<<<<< HEAD
+=======
+
+>[!NOTE]
+>I have changed the LoadShaders() function so it only needs the shaders relative path to the executable's source.
+>Therefore, you can now use whichever build directory you want, as long as you run the executables from this directory.
+
+>>>>>>> a9d1942cb578ca5a833f790ab8bb6be110ac1164
 Build the project:
 
 ```bash
@@ -62,7 +70,10 @@ All external software can be found in `rendering/ext/`.
 
 - [x] Tutorial 01
 - [x] Tutorial 02
+<<<<<<< HEAD
 
 >[!NOTE]
 >I have changed the LoadShaders() function so it only needs the shaders relative path to the executable's source.
 >Therefore, you can now use whichever build directory you want, as long as you run the executables from this directory.
+=======
+>>>>>>> a9d1942cb578ca5a833f790ab8bb6be110ac1164
