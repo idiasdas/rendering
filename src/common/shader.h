@@ -12,4 +12,8 @@
 
 #include <GL/glew.h>
 
-GLuint LoadShaders(const char * vertex_file_path,const char * fragment_file_path);
+#ifndef EXECUTABLE_SOURCE_PATH
+#define EXECUTABLE_SOURCE_PATH ""
+#endif
+
+GLuint LoadShaders(std::string vertex_file_path, std::string fragment_file_path);

@@ -61,7 +61,7 @@ int main(int argc, char* argv[]){
     glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
     glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW);
 
-    GLuint programID = LoadShaders("../src/tutorial_02/SimpleVertexShader.vertexshader", "../src/tutorial_02/SimpleFragmentShader.fragmentshader");
+    GLuint programID = LoadShaders("SimpleVertexShader.vertexshader", "SimpleFragmentShader.fragmentshader");
 
     glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
     // Tutorial 02 --------------------------------------------------------------------------------------

@@ -30,7 +30,12 @@ foreach(executable IN LISTS executables_list)
         glm::glm
     )
 
-    target_include_directories(${executable_name} PRIVATE
+    file(RELATIVE_PATH relative ${CMAKE_BINARY_DIR} "${CMAKE_CURRENT_SOURCE_DIR}/src/${executable_name}")
+    message(" *** The relative path is ${relative}")
+    target_compile_definitions(${executable_name} PRIVATE EXECUTABLE_SOURCE_PATH="${relative}/")
+
+
+    target_include_directories(${executable_name} PUBLIC
                                 ext/glfw/include
                                 ext/glew-2.2.0/include
                                 ext/glm

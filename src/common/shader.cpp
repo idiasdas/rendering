@@ -2,7 +2,7 @@
 
 using namespace std;
 
-GLuint LoadShaders(const char * vertex_file_path,const char * fragment_file_path){
+GLuint LoadShaders(string vertex_file_path, string fragment_file_path){
 
 	// Create the shaders
 	GLuint VertexShaderID = glCreateShader(GL_VERTEX_SHADER);
@@ -10,26 +10,30 @@ GLuint LoadShaders(const char * vertex_file_path,const char * fragment_file_path
 
 	// Read the Vertex Shader code from the file
 	std::string VertexShaderCode;
-	std::ifstream VertexShaderStream(vertex_file_path, std::ios::in);
+	std::ifstream VertexShaderStream(EXECUTABLE_SOURCE_PATH + vertex_file_path, std::ios::in);
 	if(VertexShaderStream.is_open()){
 		std::stringstream sstr;
 		sstr << VertexShaderStream.rdbuf();
 		VertexShaderCode = sstr.str();
 		VertexShaderStream.close();
 	}else{
-		printf("Impossible to open %s. Are you in the right directory ? Don't forget to read the FAQ !\n", vertex_file_path);
+		std::cout << "Impossible to open " <<  EXECUTABLE_SOURCE_PATH + vertex_file_path << std::endl;
 		getchar();
 		return 0;
 	}
 
 	// Read the Fragment Shader code from the file
 	std::string FragmentShaderCode;
-	std::ifstream FragmentShaderStream(fragment_file_path, std::ios::in);
+	std::ifstream FragmentShaderStream(EXECUTABLE_SOURCE_PATH + fragment_file_path, std::ios::in);
 	if(FragmentShaderStream.is_open()){
 		std::stringstream sstr;
 		sstr << FragmentShaderStream.rdbuf();
 		FragmentShaderCode = sstr.str();
 		FragmentShaderStream.close();
+	}else{
+		std::cout << "Impossible to open " <<  EXECUTABLE_SOURCE_PATH + fragment_file_path << std::endl;
+		getchar();
+		return 0;
 	}
 
 	GLint Result = GL_FALSE;
@@ -37,7 +41,7 @@ GLuint LoadShaders(const char * vertex_file_path,const char * fragment_file_path
 
 
 	// Compile Vertex Shader
-	printf("Compiling shader : %s\n", vertex_file_path);
+	std::cout << "Compiling shader : " <<  EXECUTABLE_SOURCE_PATH + vertex_file_path << std::endl;
 	char const * VertexSourcePointer = VertexShaderCode.c_str();
 	glShaderSource(VertexShaderID, 1, &VertexSourcePointer , NULL);
 	glCompileShader(VertexShaderID);
@@ -54,7 +58,8 @@ GLuint LoadShaders(const char * vertex_file_path,const char * fragment_file_path
 
 
 	// Compile Fragment Shader
-	printf("Compiling shader : %s\n", fragment_file_path);
+	std::cout << "Compiling shader : " <<  EXECUTABLE_SOURCE_PATH + fragment_file_path << std::endl;
+
 	char const * FragmentSourcePointer = FragmentShaderCode.c_str();
 	glShaderSource(FragmentShaderID, 1, &FragmentSourcePointer , NULL);
 	glCompileShader(FragmentShaderID);
