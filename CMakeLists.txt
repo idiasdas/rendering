@@ -12,6 +12,7 @@ add_subdirectory(ext)
 list(APPEND executables_list src/main.cpp)
 list(APPEND executables_list src/tutorial_01/tutorial_01.cpp)
 list(APPEND executables_list src/tutorial_02/tutorial_02.cpp)
+list(APPEND executables_list src/tutorial_03/tutorial_03.cpp)
 
 
 # For each executable in the list, create an executable target and link the necessary libraries

@@ -63,6 +63,7 @@ All external software can be found in `rendering/ext/`.
 
 - [x] Tutorial 01
 - [x] Tutorial 02
+- [x] Tutorial 03
 
 >[!NOTE]
 >I have modified LoadShaders to handle relative paths between the source file and the shaders' files.
