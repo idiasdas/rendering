@@ -40,10 +40,10 @@ Build the project:
 cd build
 make
 ```
-Finally, you can run the executable `rendering` which should show:
+Finally, you can run the executable `main` which should show:
 
 ```bash
-rendering/build$ ./rendering
+rendering/build$ ./main
 GLFW initialized
 GLEW version: 2.2.0
 GLM working
