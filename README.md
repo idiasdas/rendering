@@ -19,26 +19,26 @@ The rest of the dependencies are managed automatically with CMake.
 Clone this repository:
 
 ```bash
-$ git clone https://github.com/idiasdas/rendering
+git clone https://github.com/idiasdas/rendering
 ```
 
 Initialize its submodules:
 
 ```bash
-$ git submodule update --init
+git submodule update --init
 ```
 
 Configure CMake:
 
 ```bash
-$ cmake -B build -DCMAKE_BUILD_TYPE=Debug
+cmake -B build -DCMAKE_BUILD_TYPE=Debug
 ```
 
 Build the project:
 
 ```bash
-$ cd build
-$ make
+cd build
+make
 ```
 Finally, you can run the executable `rendering` which should show:
 
