@@ -1,6 +1,6 @@
 # rendering
 
-In this repository, I practice the basics of rendering, with a focus on OpenGL.
+In this repository, I practice the basics of rendering with a focus on OpenGL.
 
 I'm following the [OpenGL tutorial](http://www.opengl-tutorial.org/), however, I am managing dependencies and project compilation myself.
 
