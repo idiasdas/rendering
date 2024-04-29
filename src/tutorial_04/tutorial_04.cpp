@@ -218,14 +218,16 @@ int main(int argc, char* argv[]){
     glm::mat4 Projection = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.1f, 100.0f);
 
     glm::mat4 View = glm::lookAt(
-        glm::vec3(4,3,3),
-        glm::vec3(0,0,0),
-        glm::vec3(0,0,1)
+        glm::vec3(4,3,3), // camera position
+        glm::vec3(0,0,0), // camera looks at the origin
+        glm::vec3(0,1,0)  // up vector
     );
 
     glm::mat4 Model = glm::mat4(1.0f);
 
-    glm::mat4 MVP = Projection * View * Model;
+    glm::mat4 ScaledModel = glm::scale(Model, glm::vec3(0.5f, 0.5f, 0.5f));
+
+    glm::mat4 MVP = Projection * View * ScaledModel;
 
     do{
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
