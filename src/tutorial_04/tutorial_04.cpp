@@ -56,18 +56,26 @@ int main(int argc, char* argv[]){
     }
 
 
+    // Pretty triangle --------------------------------------------------------
+
+    static const GLfloat triangle_vertex_buffer_data[] = {
+        -1.0f, -1.0f, 0.0f,
+        1.0f, -1.0f, 0.0f,
+        0.0f,  1.0f, 0.0f,
+    };
+
+    static const GLfloat triangle_color_buffer_data[] = {
+        0.982f, 0.1234f, 0.654f,
+        0.931f, 0.1234f, 0.672f,
+        0.0764f,  0.2456f, 0.1234f,
+    };
+
+    // ------------------------------------------------------------------------
 
     GLuint VertexArrayID;
     glGenVertexArrays(1, &VertexArrayID);
     glBindVertexArray(VertexArrayID);
 
-    // Pretty triangle --------------------------------------------------------
-
-    // static const GLfloat g_vertex_buffer_data[] = {
-    //     -1.0f, -1.0f, 0.0f,
-    //     1.0f, -1.0f, 0.0f,
-    //     0.0f,  1.0f, 0.0f,
-    // };
 
     // Pretty Cube ------------------------------------------------------------
     static const GLfloat g_vertex_buffer_data[] = {
@@ -111,42 +119,6 @@ int main(int argc, char* argv[]){
 
     // One color for each vertex. They were generated randomly.
     static const GLfloat g_color_buffer_data[] = {
-        // 0.583f,  0.771f,  0.014f,
-        // 0.609f,  0.115f,  0.436f,
-        // 0.327f,  0.483f,  0.844f,
-        // 0.822f,  0.569f,  0.201f,
-        // 0.435f,  0.602f,  0.223f,
-        // 0.310f,  0.747f,  0.185f,
-        // 0.597f,  0.770f,  0.761f,
-        // 0.559f,  0.436f,  0.730f,
-        // 0.359f,  0.583f,  0.152f,
-        // 0.483f,  0.596f,  0.789f,
-        // 0.559f,  0.861f,  0.639f,
-        // 0.195f,  0.548f,  0.859f,
-        // 0.014f,  0.184f,  0.576f,
-        // 0.771f,  0.328f,  0.970f,
-        // 0.406f,  0.615f,  0.116f,
-        // 0.676f,  0.977f,  0.133f,
-        // 0.971f,  0.572f,  0.833f,
-        // 0.140f,  0.616f,  0.489f,
-        // 0.997f,  0.513f,  0.064f,
-        // 0.945f,  0.719f,  0.592f,
-        // 0.543f,  0.021f,  0.978f,
-        // 0.279f,  0.317f,  0.505f,
-        // 0.167f,  0.620f,  0.077f,
-        // 0.347f,  0.857f,  0.137f,
-        // 0.055f,  0.953f,  0.042f,
-        // 0.714f,  0.505f,  0.345f,
-        // 0.783f,  0.290f,  0.734f,
-        // 0.722f,  0.645f,  0.174f,
-        // 0.302f,  0.455f,  0.848f,
-        // 0.225f,  0.587f,  0.040f,
-        // 0.517f,  0.713f,  0.338f,
-        // 0.053f,  0.959f,  0.120f,
-        // 0.393f,  0.621f,  0.362f,
-        // 0.673f,  0.211f,  0.457f,
-        // 0.820f,  0.883f,  0.371f,
-        // 0.982f,  0.099f,  0.879f
         -1.0f, -1.0f, -1.0f,   // G,
         -1.0f, -1.0f,  1.0f,   // C,
         -1.0f,  1.0f,  1.0f,   // A,
@@ -198,7 +170,7 @@ int main(int argc, char* argv[]){
 
     // ------------------------------------------------------------------------
 
-    // Giving the triangle vertices to OpenGL
+    // Giving the cube vertices to OpenGL
     GLuint vertexbuffer;
     glGenBuffers(1, &vertexbuffer);// Now vertexbuffer contains the buffer ID
     glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
@@ -208,6 +180,7 @@ int main(int argc, char* argv[]){
     glGenBuffers(1, &colorbuffer);
     glBindBuffer(GL_ARRAY_BUFFER, colorbuffer);
     glBufferData(GL_ARRAY_BUFFER, sizeof(g_color_buffer_data), g_color_buffer_data, GL_STATIC_DRAW);
+
     // ------------------------------------------------------------------------
 
 	GLuint programID = LoadShaders( "SimpleTransform.vertexshader", "SingleColor.fragmentshader" );
@@ -228,6 +201,44 @@ int main(int argc, char* argv[]){
     glm::mat4 ScaledModel = glm::scale(Model, glm::vec3(0.5f, 0.5f, 0.5f));
 
     glm::mat4 MVP = Projection * View * ScaledModel;
+
+
+
+
+    // ------------------------------------------------------------------------
+    // Doing the triangle at the side
+
+    // Giving the triangle vertices to OpenGL
+    GLuint triangle_vertexbuffer;
+    glGenBuffers(1, &triangle_vertexbuffer);// Now vertexbuffer contains the buffer ID
+    glBindBuffer(GL_ARRAY_BUFFER, triangle_vertexbuffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(triangle_vertex_buffer_data), triangle_vertex_buffer_data, GL_STATIC_DRAW);
+
+    GLuint triangle_colorbuffer;
+    glGenBuffers(1, &triangle_colorbuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, triangle_colorbuffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(triangle_color_buffer_data), triangle_color_buffer_data, GL_STATIC_DRAW);
+
+
+    // Get a handle for our "MVP" uniform
+	GLuint MatrixID_triangle = glGetUniformLocation(programID, "MVP");
+
+    glm::mat4 triangle_Projection = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.1f, 100.0f);
+
+    glm::mat4 triangle_View = glm::lookAt(
+        glm::vec3(4,3,3), // camera position
+        glm::vec3(0,0,0), // camera looks at the origin
+        glm::vec3(0,1,0)  // up vector
+    );
+
+    glm::mat4 triangle_Model = glm::mat4(1.0f);
+    triangle_Model = glm::translate(triangle_Model, glm::vec3(1.5f, 0.0f, 0.0f));
+    triangle_Model = glm::rotate(triangle_Model, glm::radians(60.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+
+    // glm::mat4 triangle_ScaledModel = glm::scale(triangle_Model, glm::vec3(0.5f, 0.5f, 0.5f));
+
+    glm::mat4 triangle_MVP = triangle_Projection * triangle_View * triangle_Model;
+    //-------------------------------------------------------------------------
 
     do{
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -268,9 +279,38 @@ int main(int argc, char* argv[]){
 		// in the "MVP" uniform
 		glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
 
-        // Draw the triangle !
-        glDrawArrays(GL_TRIANGLES, 0, 36); // Starting from vertex 0; 3 vertices total -> 1 triangle
+        // Draw!
+        glDrawArrays(GL_TRIANGLES, 0, 36);
 
+
+        // triangle -----------------------------------------------------------
+        // 1st attribute buffer : vertices
+        glEnableVertexAttribArray(0);
+        glBindBuffer(GL_ARRAY_BUFFER, triangle_vertexbuffer);
+        glVertexAttribPointer(
+            0,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
+            3,                  // size
+            GL_FLOAT,           // type
+            GL_FALSE,           // normalized?
+            0,                  // stride
+            (void*)0            // array buffer offset
+        );
+
+        // 2nd attribute buffer : colors
+        glEnableVertexAttribArray(1);
+        glBindBuffer(GL_ARRAY_BUFFER, triangle_colorbuffer);
+        glVertexAttribPointer(
+            1,                                // attribute. No particular reason for 1, but must match the layout in the shader.
+            3,                                // size
+            GL_FLOAT,                         // type
+            GL_FALSE,                         // normalized?
+            0,                                // stride
+            (void*)0                          // array buffer offset
+        );
+		glUniformMatrix4fv(MatrixID_triangle, 1, GL_FALSE, &triangle_MVP[0][0]);
+        glDrawArrays(GL_TRIANGLES, 0, 3);
+
+        // ---------------------------------------------------------------------
         glDisableVertexAttribArray(0);
 
         glfwSwapBuffers(window);
