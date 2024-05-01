@@ -9,6 +9,73 @@
 #include "common/shader.h"
 
 GLFWwindow* window;
+void draw(GLuint vertexbuffer, GLuint colorbuffer, GLuint programID, GLuint MatrixID, glm::mat4 MVP, GLuint triangle_vertexbuffer, GLuint triangle_colorbuffer, glm::mat4 triangle_MVP){
+            // 1st attribute buffer : vertices
+        glEnableVertexAttribArray(0);
+        glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
+        glVertexAttribPointer(
+            0,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
+            3,                  // size
+            GL_FLOAT,           // type
+            GL_FALSE,           // normalized?
+            0,                  // stride
+            (void*)0            // array buffer offset
+        );
+
+        // 2nd attribute buffer : colors
+        glEnableVertexAttribArray(1);
+        glBindBuffer(GL_ARRAY_BUFFER, colorbuffer);
+        glVertexAttribPointer(
+            1,                                // attribute. No particular reason for 1, but must match the layout in the shader.
+            3,                                // size
+            GL_FLOAT,                         // type
+            GL_FALSE,                         // normalized?
+            0,                                // stride
+            (void*)0                          // array buffer offset
+        );
+
+        // Use our shader
+        glUseProgram(programID);
+
+        // Send our transformation to the currently bound shader,
+		// in the "MVP" uniform
+		glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
+
+        // Draw!
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+
+
+        // triangle -----------------------------------------------------------
+        // 1st attribute buffer : vertices
+        glEnableVertexAttribArray(0);
+        glBindBuffer(GL_ARRAY_BUFFER, triangle_vertexbuffer);
+        glVertexAttribPointer(
+            0,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
+            3,                  // size
+            GL_FLOAT,           // type
+            GL_FALSE,           // normalized?
+            0,                  // stride
+            (void*)0            // array buffer offset
+        );
+
+        // 2nd attribute buffer : colors
+        glEnableVertexAttribArray(1);
+        glBindBuffer(GL_ARRAY_BUFFER, triangle_colorbuffer);
+        glVertexAttribPointer(
+            1,                                // attribute. No particular reason for 1, but must match the layout in the shader.
+            3,                                // size
+            GL_FLOAT,                         // type
+            GL_FALSE,                         // normalized?
+            0,                                // stride
+            (void*)0                          // array buffer offset
+        );
+		glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &triangle_MVP[0][0]);
+        glDrawArrays(GL_TRIANGLES, 0, 3);
+
+        // ---------------------------------------------------------------------
+        glDisableVertexAttribArray(0);
+        glDisableVertexAttribArray(1);
+}
 
 int initialize(){
     // Initializing GLFW
@@ -176,6 +243,12 @@ int main(int argc, char* argv[]){
     glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
     glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW);
 
+    std::cout << "sizeof(g_vertex_buffer_data): " << sizeof(g_vertex_buffer_data) << std::endl;
+    std::cout << "sizeof(g_color_buffer_data): " << sizeof(g_color_buffer_data) << std::endl;
+
+    std::cout << "sizeof(GLfloat): " << sizeof(GLfloat) << std::endl;
+
+
     GLuint colorbuffer;
     glGenBuffers(1, &colorbuffer);
     glBindBuffer(GL_ARRAY_BUFFER, colorbuffer);
@@ -221,7 +294,7 @@ int main(int argc, char* argv[]){
 
 
     // Get a handle for our "MVP" uniform
-	GLuint MatrixID_triangle = glGetUniformLocation(programID, "MVP");
+	// GLuint MatrixID_triangle = glGetUniformLocation(programID, "MVP");
 
     glm::mat4 triangle_Projection = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.1f, 100.0f);
 
@@ -248,70 +321,7 @@ int main(int argc, char* argv[]){
         // Accept fragment if it closer to the camera than the former one
         glDepthFunc(GL_LESS);
 
-        // 1st attribute buffer : vertices
-        glEnableVertexAttribArray(0);
-        glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
-        glVertexAttribPointer(
-            0,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
-            3,                  // size
-            GL_FLOAT,           // type
-            GL_FALSE,           // normalized?
-            0,                  // stride
-            (void*)0            // array buffer offset
-        );
-
-        // 2nd attribute buffer : colors
-        glEnableVertexAttribArray(1);
-        glBindBuffer(GL_ARRAY_BUFFER, colorbuffer);
-        glVertexAttribPointer(
-            1,                                // attribute. No particular reason for 1, but must match the layout in the shader.
-            3,                                // size
-            GL_FLOAT,                         // type
-            GL_FALSE,                         // normalized?
-            0,                                // stride
-            (void*)0                          // array buffer offset
-        );
-
-        // Use our shader
-        glUseProgram(programID);
-
-        // Send our transformation to the currently bound shader,
-		// in the "MVP" uniform
-		glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
-
-        // Draw!
-        glDrawArrays(GL_TRIANGLES, 0, 36);
-
-
-        // triangle -----------------------------------------------------------
-        // 1st attribute buffer : vertices
-        glEnableVertexAttribArray(0);
-        glBindBuffer(GL_ARRAY_BUFFER, triangle_vertexbuffer);
-        glVertexAttribPointer(
-            0,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
-            3,                  // size
-            GL_FLOAT,           // type
-            GL_FALSE,           // normalized?
-            0,                  // stride
-            (void*)0            // array buffer offset
-        );
-
-        // 2nd attribute buffer : colors
-        glEnableVertexAttribArray(1);
-        glBindBuffer(GL_ARRAY_BUFFER, triangle_colorbuffer);
-        glVertexAttribPointer(
-            1,                                // attribute. No particular reason for 1, but must match the layout in the shader.
-            3,                                // size
-            GL_FLOAT,                         // type
-            GL_FALSE,                         // normalized?
-            0,                                // stride
-            (void*)0                          // array buffer offset
-        );
-		glUniformMatrix4fv(MatrixID_triangle, 1, GL_FALSE, &triangle_MVP[0][0]);
-        glDrawArrays(GL_TRIANGLES, 0, 3);
-
-        // ---------------------------------------------------------------------
-        glDisableVertexAttribArray(0);
+        draw(vertexbuffer, colorbuffer, programID, MatrixID, MVP, triangle_vertexbuffer, triangle_colorbuffer, triangle_MVP);
 
         glfwSwapBuffers(window);
         glfwPollEvents();
