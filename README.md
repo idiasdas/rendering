@@ -65,6 +65,11 @@ All external software can be found in `rendering/ext/`.
 - [x] Tutorial 02
 - [x] Tutorial 03
 - [x] Tutorial 04
+    - Changed colors
+    - Added triangle beside the cube
+- [x] My renderer
+    - Created OpenGLObject class to handle vertices, colors, and draw procedure.
+- [x] Tutorial 05
 
 >[!NOTE]
 >I have modified LoadShaders to handle relative paths between the source file and the shaders' files.
