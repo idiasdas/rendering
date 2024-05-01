@@ -7,6 +7,23 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_subdirectory(ext)
 
+# add_executable(my_renderer src/my_renderer/main.cpp src/my_renderer/opengl_object.cpp)
+
+# target_compile_definitions(my_renderer PRIVATE EXECUTABLE_SOURCE_PATH="../src/my_renderer/")
+
+# target_link_libraries(my_renderer PRIVATE
+#     glew
+#     glfw
+#     glm::glm
+# )
+
+# target_include_directories(my_renderer PUBLIC
+#     ext/glfw/include
+#     ext/glew-2.2.0/include
+#     ext/glm
+#     src/
+# )
+
 # Add each executable to the list executables_list
 
 list(APPEND executables_list src/main.cpp)
@@ -14,7 +31,8 @@ list(APPEND executables_list src/tutorial_01/tutorial_01.cpp)
 list(APPEND executables_list src/tutorial_02/tutorial_02.cpp)
 list(APPEND executables_list src/tutorial_03/tutorial_03.cpp)
 list(APPEND executables_list src/tutorial_04/tutorial_04.cpp)
-
+list(APPEND executables_list src/my_renderer/my_renderer.cpp)
+# list(APPEND executables_list src/tutorial_05/tutorial_05.cpp)
 
 # For each executable in the list, create an executable target and link the necessary libraries
 
