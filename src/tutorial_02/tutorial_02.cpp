@@ -6,6 +6,8 @@
 
 #include "common/shader.h"
 
+GLFWwindow* window;
+
 int main(int argc, char* argv[]){
     // Initializing GLFW
     if(!glfwInit()){
@@ -18,7 +20,6 @@ int main(int argc, char* argv[]){
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);  // We don't want the old OpenGL
 
-    GLFWwindow* window;
     window = glfwCreateWindow(1024, 768, "Tutorial 02", NULL, NULL);
 
     if(window == nullptr){

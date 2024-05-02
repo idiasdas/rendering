@@ -4,6 +4,9 @@
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 
+GLFWwindow* window;
+
+
 int main(int argc, char* argv[]){
 
     // Initializing GLFW
@@ -19,7 +22,6 @@ int main(int argc, char* argv[]){
     // glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // To make MacOS happy; should not be needed
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); // We don't want the old OpenGL
 
-    GLFWwindow* window;
     window = glfwCreateWindow(1024, 768, "Tutorial 01", NULL, NULL);
 
     if(window == nullptr){

@@ -69,7 +69,7 @@ int main( void )
 	// Get a handle for our "MVP" uniform
 	GLuint MatrixID = glGetUniformLocation(programID, "MVP");
 
-	// Projection matrix : 45� Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
+	// Projection matrix : 45 degrees Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
 	glm::mat4 Projection = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.1f, 100.0f);
 	// Camera matrix
 	glm::mat4 View       = glm::lookAt(
@@ -77,14 +77,15 @@ int main( void )
 								glm::vec3(0,0,0), // and looks at the origin
 								glm::vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
 						   );
+
 	// Model matrix : an identity matrix (model will be at the origin)
 	glm::mat4 Model      = glm::mat4(1.0f);
 	// Our ModelViewProjection : multiplication of our 3 matrices
 	glm::mat4 MVP        = Projection * View * Model; // Remember, matrix multiplication is the other way around
 
 	// Load the texture using any two methods
-	GLuint Texture = loadBMP_custom("../src/tutorial_05/uvtemplate.bmp");
-	// GLuint Texture = loadDDS("uvtemplate.DDS");
+	// GLuint Texture = loadBMP_custom("../src/tutorial_05/uvtemplate.bmp");
+	GLuint Texture = loadDDS("../src/tutorial_05/uvtemplate.DDS");
 
 	// Get a handle for our "myTextureSampler" uniform
 	GLuint TextureID  = glGetUniformLocation(programID, "myTextureSampler");
@@ -132,42 +133,42 @@ int main( void )
 
 	// Two UV coordinatesfor each vertex. They were created with Blender.
 	static const GLfloat g_uv_buffer_data[] = {
-		0.000059f, 1.0f-0.000004f,
-		0.000103f, 1.0f-0.336048f,
-		0.335973f, 1.0f-0.335903f,
-		1.000023f, 1.0f-0.000013f,
-		0.667979f, 1.0f-0.335851f,
-		0.999958f, 1.0f-0.336064f,
-		0.667979f, 1.0f-0.335851f,
-		0.336024f, 1.0f-0.671877f,
-		0.667969f, 1.0f-0.671889f,
-		1.000023f, 1.0f-0.000013f,
-		0.668104f, 1.0f-0.000013f,
-		0.667979f, 1.0f-0.335851f,
-		0.000059f, 1.0f-0.000004f,
-		0.335973f, 1.0f-0.335903f,
-		0.336098f, 1.0f-0.000071f,
-		0.667979f, 1.0f-0.335851f,
-		0.335973f, 1.0f-0.335903f,
-		0.336024f, 1.0f-0.671877f,
-		1.000004f, 1.0f-0.671847f,
-		0.999958f, 1.0f-0.336064f,
-		0.667979f, 1.0f-0.335851f,
-		0.668104f, 1.0f-0.000013f,
-		0.335973f, 1.0f-0.335903f,
-		0.667979f, 1.0f-0.335851f,
-		0.335973f, 1.0f-0.335903f,
-		0.668104f, 1.0f-0.000013f,
-		0.336098f, 1.0f-0.000071f,
-		0.000103f, 1.0f-0.336048f,
-		0.000004f, 1.0f-0.671870f,
-		0.336024f, 1.0f-0.671877f,
-		0.000103f, 1.0f-0.336048f,
-		0.336024f, 1.0f-0.671877f,
-		0.335973f, 1.0f-0.335903f,
-		0.667969f, 1.0f-0.671889f,
-		1.000004f, 1.0f-0.671847f,
-		0.667979f, 1.0f-0.335851f
+		0.000059f, 0.000004f,  //1.0f-
+		0.000103f, 0.336048f,  //1.0f-
+		0.335973f, 0.335903f,  //1.0f-
+		1.000023f, 0.000013f,  //1.0f-
+		0.667979f, 0.335851f,  //1.0f-
+		0.999958f, 0.336064f,  //1.0f-
+		0.667979f, 0.335851f,  //1.0f-
+		0.336024f, 0.671877f,  //1.0f-
+		0.667969f, 0.671889f,  //1.0f-
+		1.000023f, 0.000013f,  //1.0f-
+		0.668104f, 0.000013f,  //1.0f-
+		0.667979f, 0.335851f,  //1.0f-
+		0.000059f, 0.000004f,  //1.0f-
+		0.335973f, 0.335903f,  //1.0f-
+		0.336098f, 0.000071f,  //1.0f-
+		0.667979f, 0.335851f,  //1.0f-
+		0.335973f, 0.335903f,  //1.0f-
+		0.336024f, 0.671877f,  //1.0f-
+		1.000004f, 0.671847f,  //1.0f-
+		0.999958f, 0.336064f,  //1.0f-
+		0.667979f, 0.335851f,  //1.0f-
+		0.668104f, 0.000013f,  //1.0f-
+		0.335973f, 0.335903f,  //1.0f-
+		0.667979f, 0.335851f,  //1.0f-
+		0.335973f, 0.335903f,  //1.0f-
+		0.668104f, 0.000013f,  //1.0f-
+		0.336098f, 0.000071f,  //1.0f-
+		0.000103f, 0.336048f,  //1.0f-
+		0.000004f, 0.671870f,  //1.0f-
+		0.336024f, 0.671877f,  //1.0f-
+		0.000103f, 0.336048f,  //1.0f-
+		0.336024f, 0.671877f,  //1.0f-
+		0.335973f, 0.335903f,  //1.0f-
+		0.667969f, 0.671889f,  //1.0f-
+		1.000004f, 0.671847f,  //1.0f-
+		0.667979f, 0.335851f  //1.0f-
 	};
 
 	GLuint vertexbuffer;
