@@ -1,38 +1,121 @@
+#include "GL/glew.h"
+#include "GLFW/glfw3.h"
+#include "glm/glm.hpp"
+#include "glm/gtc/matrix_transform.hpp"
+
+#include "model.h"
+#include "shader.h"
+#include "texture.h"
+#include "controls.h"
+
 #include <iostream>
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
-
-
-#include <glm/vec3.hpp> // glm::vec3
-#include <glm/vec4.hpp> // glm::vec4
-#include <glm/mat4x4.hpp> // glm::mat4
-#include <glm/ext/matrix_transform.hpp> // glm::translate, glm::rotate, glm::scale
-#include <glm/ext/matrix_clip_space.hpp> // glm::perspective
-#include <glm/ext/scalar_constants.hpp> // glm::pi
+#include <fstream>
+#include <string>
+#include <vector>
 
 GLFWwindow* window;
 
-glm::mat4 camera(float Translate, glm::vec2 const& Rotate)
-{
-	glm::mat4 Projection = glm::perspective(glm::pi<float>() * 0.25f, 4.0f / 3.0f, 0.1f, 100.f);
-	glm::mat4 View = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -Translate));
-	View = glm::rotate(View, Rotate.y, glm::vec3(-1.0f, 0.0f, 0.0f));
-	View = glm::rotate(View, Rotate.x, glm::vec3(0.0f, 1.0f, 0.0f));
-	glm::mat4 Model = glm::scale(glm::mat4(1.0f), glm::vec3(0.5f));
-	return Projection * View * Model;
+static int initialize(){
+    // Initializing GLFW
+    glewExperimental = true;
+    if(!glfwInit()){
+        std::cout << "Failed to initialize GLFW" << std::endl;
+        return -1;
+    }
+
+    // Create OpenGL window and context
+    glfwWindowHint(GLFW_SAMPLES, 4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+    window = glfwCreateWindow(1024, 768, "Rendering", NULL, NULL);
+
+    if(window == nullptr){
+        std::cout << "Failed to open GLFW window" << std::endl;
+        std::cout << "If you have an Intel GPU, they are not 4.6 compatible." << std::endl;
+        std::cout << "Try the 2.1 version of the tutorials." << std::endl;
+        glfwTerminate();
+        return -1;
+    }
+    glfwMakeContextCurrent(window);
+
+    // Initialize GLEW
+    if(glewInit() != GLEW_OK){
+        std::cout << "Failed to initialize GLEW" << std::endl;
+        return -1;
+    }
+
+    // Ensure we can capture the escape key being pressed below
+    glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
+
+    // Hide the mouse and enable unlimited movement
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
+    // Set the mouse at the center of the screen
+    glfwPollEvents();
+    glfwSetCursorPos(window, 1024/2, 768/2);
+
+    // Dark blue background
+    glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
+
+    // Enable depth test
+	glEnable(GL_DEPTH_TEST);
+	// Accept fragment if it is closer to the camera than the former one
+	glDepthFunc(GL_LESS);
+
+    unsigned int vertex_array_ID;
+    glGenVertexArrays(1, &vertex_array_ID);
+    glBindVertexArray(vertex_array_ID);
+
+    return vertex_array_ID;
 }
 
-int main() {
-    if (!glfwInit()) {
-        std::cerr << "Failed to initialize GLFW" << std::endl;
-        return -1;
-    } else {
-        std::cout << "GLFW initialized" << std::endl;
-    }
-    const GLubyte* v = glewGetString(GLEW_VERSION);
-    std::cout << "GLEW version: " << v << std::endl;
-    camera(1.0f, glm::vec2(0.0f, 0.0f));
-    std::cout << "GLM working" << std::endl;
+int main(int argc, char* argv[]){
 
+    unsigned int vertex_array_ID = initialize();
+    if(vertex_array_ID == -1) exit(1);
+
+    OGLModel triangle, cube;
+
+    if(!triangle.read_model_file("../utils/models/triangle.model")) exit(1);
+    triangle.load_model_on_gpu();
+
+    if(!cube.read_model_file("../utils/models/cube.model")) exit(1);
+    cube.load_model_on_gpu();
+
+    unsigned int texture_shaders = LoadShaders("../utils/shaders/texture.vertexshader", "../utils/shaders/texture.fragmentshader");
+    unsigned int projection_shaders = LoadShaders("../utils/shaders/projection.vertexshader", "../utils/shaders/simple.fragmentshader");
+
+    // unsigned int texture = loadDDS("../utils/textures/uvtemplate.DDS");
+    unsigned int texture = loadBMP_custom("../utils/textures/fire.bmp");
+
+	unsigned int texture_ID  = glGetUniformLocation(texture_shaders, "my_texture_sampler");
+    glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, texture);
+	glUniform1i(texture_ID, 0);
+
+    cube.set_model_matrix(glm::translate(cube.get_model_matrix(), glm::vec3(2.0f, 0.0f, 0.0f)));
+
+    glm::mat4 projection_matrix ;
+    glm::mat4 view_matrix;
+
+
+    do{
+
+        computeMatricesFromInputs();
+		projection_matrix = getProjectionMatrix();
+		view_matrix = getViewMatrix();
+
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        triangle.draw_model(projection_shaders, view_matrix, projection_matrix);
+        cube.draw_model(texture_shaders, view_matrix, projection_matrix);
+
+        glfwSwapBuffers(window);
+        glfwPollEvents();
+    } while(glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS && glfwWindowShouldClose(window) == 0);
+
+    glDeleteVertexArrays(1, &vertex_array_ID);
     return 0;
 }

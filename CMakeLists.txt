@@ -5,62 +5,30 @@ project(rendering)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+set(EXECUTABLE_NAME rendering_exec)
+
 add_subdirectory(ext)
 
-# add_executable(my_renderer src/my_renderer/main.cpp src/my_renderer/opengl_object.cpp)
+file(GLOB EXECUTABLE_SOURCES src/*.cpp)
 
-# target_compile_definitions(my_renderer PRIVATE EXECUTABLE_SOURCE_PATH="../src/my_renderer/")
+add_executable(${EXECUTABLE_NAME} ${EXECUTABLE_SOURCES})
 
-# target_link_libraries(my_renderer PRIVATE
-#     glew
-#     glfw
-#     glm::glm
-# )
+target_link_libraries(${EXECUTABLE_NAME} PRIVATE
+    glew
+    glfw
+    glm::glm
+)
 
-# target_include_directories(my_renderer PUBLIC
-#     ext/glfw/include
-#     ext/glew-2.2.0/include
-#     ext/glm
-#     src/
-# )
+file(RELATIVE_PATH relative ${CMAKE_BINARY_DIR} "${CMAKE_CURRENT_SOURCE_DIR}/src/")
 
-# Add each executable to the list executables_list
+message(" *** The relative path between build and source is:\n\t - ${relative}")
 
-list(APPEND executables_list src/main.cpp)
-list(APPEND executables_list src/my_renderer/my_renderer.cpp)
-list(APPEND executables_list src/tutorial_01/tutorial_01.cpp)
-list(APPEND executables_list src/tutorial_02/tutorial_02.cpp)
-list(APPEND executables_list src/tutorial_03/tutorial_03.cpp)
-list(APPEND executables_list src/tutorial_04/tutorial_04.cpp)
-list(APPEND executables_list src/tutorial_05/tutorial_05.cpp)
-list(APPEND executables_list src/tutorial_06/tutorial_06.cpp)
-
-# For each executable in the list, create an executable target and link the necessary libraries
-
-foreach(executable IN LISTS executables_list)
-
-    get_filename_component(executable_name ${executable} NAME_WE)
-
-    file(GLOB COMMON_EXECUTABLE_SOURCES src/common/*.cpp)
-
-    add_executable(${executable_name} ${executable} ${COMMON_EXECUTABLE_SOURCES})
-
-    target_link_libraries(${executable_name} PRIVATE
-        glew
-        glfw
-        glm::glm
-    )
-
-    file(RELATIVE_PATH relative ${CMAKE_BINARY_DIR} "${CMAKE_CURRENT_SOURCE_DIR}/src/${executable_name}")
-    message(" *** The relative path is ${relative}")
-    target_compile_definitions(${executable_name} PRIVATE EXECUTABLE_SOURCE_PATH="${relative}/")
+target_compile_definitions(${EXECUTABLE_NAME} PRIVATE EXECUTABLE_SOURCE_PATH="${relative}/")
 
 
-    target_include_directories(${executable_name} PUBLIC
-                                ext/glfw/include
-                                ext/glew-2.2.0/include
-                                ext/glm
-                                src/
-    )
-
-endforeach()
+target_include_directories(${EXECUTABLE_NAME} PUBLIC
+                            ext/glfw/include
+                            ext/glew-2.2.0/include
+                            ext/glm
+                            src/
+)
