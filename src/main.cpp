@@ -103,13 +103,13 @@ int main(int argc, char* argv[]){
 
     do{
 
-        computeMatricesFromInputs();
-		projection_matrix = getProjectionMatrix();
-		view_matrix = getViewMatrix();
+        compute_matrices_from_inputs();
+		projection_matrix = get_projection_matrix();
+		view_matrix = get_view_matrix();
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        triangle.draw_model(projection_shaders, view_matrix, projection_matrix);
+        // triangle.draw_model(projection_shaders, view_matrix, projection_matrix);
         cube.draw_model(texture_shaders, view_matrix, projection_matrix);
 
         glfwSwapBuffers(window);
